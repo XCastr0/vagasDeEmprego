@@ -1,154 +1,103 @@
-let opcao = parseInt(prompt(
-    "Escolha uma opção:\n" +
-    "1 - Listar vagas disponíveis\n" +
-    "2 - Criar uma nova vaga\n" +
-    "3 - Visualizar uma vaga\n" +
-    "4 - Inscrever um candidato em uma vaga\n" +
-    "5 - Excluir uma vaga\n" +
-    "6 - Sair\n"
-));
-function listarVagas(){
+let vagas = [];
+
+function listarVagas() {
+    let lista = document.getElementById("lista-vagas");
+    lista.innerHTML = "";
+
     if (vagas.length === 0) {
-        alert("Nenhuma vaga cadastrada.");
+        lista.innerHTML = "<p>Nenhuma vaga cadastrada.</p>";
+        return;
+    }
+
+    vagas.forEach((vaga, index) => {
+        let vagaElement = document.createElement("div");
+        vagaElement.classList.add("vaga");
+        vagaElement.innerHTML = `
+            <strong>Vaga #${index + 1}</strong><br>
+            <b>Nome:</b> ${vaga.nome} <br>
+            <b>Descrição:</b> ${vaga.descricao} <br>
+            <b>Data Limite:</b> ${vaga.data} <br>
+            <b>Inscritos:</b> ${vaga.inscritos} <br>
+            <b>Candidatos:</b> ${vaga.candidatos.length > 0 ? vaga.candidatos.join(", ") : "Nenhum"} <br>
+        `;
+        lista.appendChild(vagaElement);
+    });
+}
+
+function criarVaga() {
+    let nome = prompt("Digite o nome da vaga:");
+    let descricao = prompt("Digite a descrição da vaga:");
+    let data = prompt("Digite a data limite da vaga:");
+
+    if (nome && descricao && data) {
+        let novaVaga = {
+            nome: nome,
+            descricao: descricao,
+            data: data,
+            candidatos: [],
+            inscritos: 0
+        };
+        vagas.push(novaVaga);
+        alert("Vaga criada com sucesso!");
+        listarVagas();
     } else {
-        let exibirVaga = vagas.map((vaga, index) =>
-            "Vaga #" + (index + 1) + "\n" +
-            "Nome: " + vaga.nome + "\n" +
-            "Descrição: " + vaga.descricao + "\n" +
-            "Data limite: " + vaga.data + "\n" +
-            "Inscritos: " + vaga.inscritos
-        ).join("\n\n");
-
-        alert(exibirVaga);
+        alert("Preencha todos os campos!");
     }
-
 }
 
-function criarVaga(){
-  // Criar uma nova vaga
-  let nomeVaga = prompt("Digite o nome para a vaga:");
-  let descricaoVaga = prompt("Digite a descrição para a vaga:");
-  let dataLimite = prompt("Digite a data final para a vaga:");
+function visualizarVaga() {
+    let indice = parseInt(prompt("Digite o índice da vaga que deseja visualizar:")) - 1;
 
-  let confirmarInf = prompt("Tem certeza dessas informações? Digite 'sim' para confirmar.\n" +
-      "Nome da vaga: " + nomeVaga + "\n" +
-      "Descrição: " + descricaoVaga + "\n" +
-      "Data limite: " + dataLimite);
-
-  if (confirmarInf.toLowerCase() === "sim") {
-      let novaVaga = {
-          nome: nomeVaga,
-          descricao: descricaoVaga,
-          data: dataLimite,
-          candidatos: [], // Inicializa um array vazio para candidatos
-          inscritos: 0    // Inicializa o contador de inscritos
-      };
-
-      vagas.push(novaVaga);
-      alert("Vaga criada com sucesso!");
-  } else {
-      alert("Operação cancelada.");
-  }   
-}
-function buscarPorIndice(){
- // Visualizar uma vaga específica
- let indiceVisualizar = parseInt(prompt("Digite o índice da vaga que deseja visualizar:")) - 1;
-
- if (indiceVisualizar >= 0 && indiceVisualizar < vagas.length) {
-     let vaga = vagas[indiceVisualizar];
-     alert("Vaga #" + (indiceVisualizar + 1) + "\n" +
-         "Nome: " + vaga.nome + "\n" +
-         "Descrição: " + vaga.descricao + "\n" +
-         "Data limite: " + vaga.data + "\n" +
-         "Inscritos: " + vaga.inscritos + "\n" +
-         "Candidatos: " + (vaga.candidatos.length > 0 ? vaga.candidatos.join(", ") : "Nenhum candidato ainda.")
-     );
- } else {
-     alert("Índice inválido.");
- }
-}
-function inscricaoVaga(){
- // Inscrever-se em uma vaga
- let nomeCandidato = prompt("Digite o seu nome:");
- let indiceVaga = parseInt(prompt("Digite o índice da vaga que deseja se inscrever:")) - 1;
-
- if (indiceVaga >= 0 && indiceVaga < vagas.length) {
-     let vagaEscolhida = vagas[indiceVaga];
-
-     let confirmarInscricao = confirm("Você escolheu a vaga: \n" +
-         "Nome: " + vagaEscolhida.nome + "\n" +
-         "Descrição: " + vagaEscolhida.descricao + "\n" +
-         "Data limite: " + vagaEscolhida.data + "\n\n" +
-         "Confirma sua inscrição para esta vaga?");
-     
-     if (confirmarInscricao) {
-         vagaEscolhida.candidatos.push(nomeCandidato);
-         vagaEscolhida.inscritos += 1;
-
-         alert("Inscrição realizada com sucesso! Número de inscritos na vaga " + vagaEscolhida.nome + ": " + vagaEscolhida.inscritos);
-     } else {
-         alert("Inscrição cancelada.");
-     }
- } else {
-     alert("Índice inválido. Não há vaga com esse número.");
- }
-}
-function excluirVaga(){
- // Excluir uma vaga
- let indiceExcluir = parseInt(prompt("Digite o índice da vaga que deseja excluir:")) - 1;
-
- if (indiceExcluir >= 0 && indiceExcluir < vagas.length) {
-     let confirmarExclusao = confirm("Tem certeza que deseja excluir a vaga '" + vagas[indiceExcluir].nome + "'?");
-     
-     if (confirmarExclusao) {
-         vagas.splice(indiceExcluir, 1);
-         alert("Vaga excluída com sucesso!");
-     }
- } else {
-     alert("Índice inválido.");
- }
-}
-let vagas = []; // Armazena todas as vagas
-
-while (opcao !== 6) {
-    switch (opcao) {
-        case 1:
-            // Exibir todas as vagas disponíveis
-            listarVagas()
-            
-            break;
-
-        case 2:
-            criarVaga()
-            break;
-
-        case 3:
-            buscarPorIndice()
-           
-            break;
-
-        case 4:
-            inscricaoVaga()
-            break;
-
-        case 5:
-            excluirVaga()
-            break;
-
-        default:
-            alert("Opção inválida.");
+    if (indice >= 0 && indice < vagas.length) {
+        let vaga = vagas[indice];
+        alert(
+            `Vaga #${indice + 1}\n` +
+            `Nome: ${vaga.nome}\n` +
+            `Descrição: ${vaga.descricao}\n` +
+            `Data Limite: ${vaga.data}\n` +
+            `Inscritos: ${vaga.inscritos}\n` +
+            `Candidatos: ${vaga.candidatos.length > 0 ? vaga.candidatos.join(", ") : "Nenhum"}`
+        );
+    } else {
+        alert("Índice inválido!");
     }
-
-    // Captura novamente a opção após a execução de cada comando
-    opcao = parseInt(prompt(
-        "Escolha uma opção:\n" +
-        "1 - Listar vagas disponíveis\n" +
-        "2 - Criar uma nova vaga\n" +
-        "3 - Visualizar uma vaga\n" +
-        "4 - Inscrever um candidato em uma vaga\n" +
-        "5 - Excluir uma vaga\n" +
-        "6 - Sair\n"
-    ));
 }
 
-console.log("Saindo do sistema...");
+function inscreverCandidato() {
+    let nome = prompt("Digite seu nome:");
+    let indice = parseInt(prompt("Digite o índice da vaga desejada:")) - 1;
+
+    if (indice >= 0 && indice < vagas.length) {
+        let vaga = vagas[indice];
+        let confirmar = confirm(
+            `Deseja se inscrever na vaga:\n` +
+            `Nome: ${vaga.nome}\n` +
+            `Descrição: ${vaga.descricao}\n` +
+            `Data Limite: ${vaga.data}`
+        );
+
+        if (confirmar) {
+            vaga.candidatos.push(nome);
+            vaga.inscritos += 1;
+            alert("Inscrição realizada com sucesso!");
+            listarVagas();
+        }
+    } else {
+        alert("Índice inválido!");
+    }
+}
+
+function excluirVaga() {
+    let indice = parseInt(prompt("Digite o índice da vaga a ser excluída:")) - 1;
+
+    if (indice >= 0 && indice < vagas.length) {
+        let confirmar = confirm(`Tem certeza que deseja excluir a vaga: ${vagas[indice].nome}?`);
+        if (confirmar) {
+            vagas.splice(indice, 1);
+            alert("Vaga excluída com sucesso!");
+            listarVagas();
+        }
+    } else {
+        alert("Índice inválido!");
+    }
+}

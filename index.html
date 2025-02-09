@@ -1,12 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="script.js"></script>
+    <title>Gerenciador de Vagas</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
+
+    <h1>Gerenciador de Vagas</h1>
+    <div class="container">
+        <div class="menu">
+            <button onclick="listarVagas()">Listar Vagas</button>
+            <button onclick="criarVaga()">Criar Nova Vaga</button>
+            <button onclick="visualizarVaga()">Visualizar Vaga</button>
+            <button onclick="inscreverCandidato()">Inscrever Candidato</button>
+            <button onclick="excluirVaga()">Excluir Vaga</button>
+        </div>
+
+        <h2>Vagas Disponíveis</h2>
+        <div id="lista-vagas"></div>
+    </div>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
